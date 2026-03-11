@@ -1,0 +1,3 @@
+C:/Users/Admin/Documents/kode/blockchain/build/CMakeFiles/Blockchain.dir
+C:/Users/Admin/Documents/kode/blockchain/build/CMakeFiles/edit_cache.dir
+C:/Users/Admin/Documents/kode/blockchain/build/CMakeFiles/rebuild_cache.dir
