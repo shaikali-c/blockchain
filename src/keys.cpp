@@ -1,4 +1,5 @@
 #include <cryptography/keys.h>
+#include <sodium/crypto_sign.h>
 
 Keys::Keys(){
     createKeys();
@@ -48,4 +49,28 @@ void Keys::loadKeys(const std::string& kname) {
 
     secretKey.read(reinterpret_cast<char*>(_secretKey.data()), crypto_sign_SECRETKEYBYTES);
     publicKey.read(reinterpret_cast<char*>(_publicKey.data()), crypto_sign_PUBLICKEYBYTES);
+}
+
+std::vector<unsigned char> Keys::sign(const std::string& base) {
+    std::vector<unsigned char> signature(crypto_sign_BYTES);
+
+    crypto_sign_detached(
+        signature.data(),
+        nullptr,
+        reinterpret_cast<const unsigned char*>(base.data()),
+        base.size(),
+        _secretKey.data()
+    );
+
+    return signature;
+}
+
+int Keys::verifySignature(const std::string& base, std::vector<unsigned char> signature) {
+    int result = crypto_sign_verify_detached(
+            signature.data(),
+            (unsigned char*)base.data(),
+            base.size(),
+            _publicKey.data()
+        );
+    return result;
 }

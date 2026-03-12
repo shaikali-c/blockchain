@@ -5,6 +5,5 @@ int main() {
     if (sodium_init() < 0) {
         return 1;
     }
-    Keys mykeys{"Temp"};
-    std::cout << mykeys.publicKeyHex();
+    Keys mykeys{"shaiks"};
 }
