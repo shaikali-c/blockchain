@@ -84,8 +84,8 @@ build CMakeFiles/Blockchain.dir/src/common.cpp.obj: CXX_COMPILER__Blockchain_uns
 #############################################
 # Link the executable Blockchain.exe
 
-build Blockchain.exe: CXX_EXECUTABLE_LINKER__Blockchain_ CMakeFiles/Blockchain.dir/src/main.cpp.obj CMakeFiles/Blockchain.dir/src/keys.cpp.obj CMakeFiles/Blockchain.dir/src/common.cpp.obj | C$:/msys64/mingw64/lib/libsodium.dll.a
-  LINK_LIBRARIES = C:/msys64/mingw64/lib/libsodium.dll.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+build Blockchain.exe: CXX_EXECUTABLE_LINKER__Blockchain_ CMakeFiles/Blockchain.dir/src/main.cpp.obj CMakeFiles/Blockchain.dir/src/keys.cpp.obj CMakeFiles/Blockchain.dir/src/common.cpp.obj | C$:/msys64/mingw64/lib/libsodium.dll.a C$:/Users/Admin/Documents/kode/blockchain/lib/libleveldb.a
+  LINK_LIBRARIES = C:/msys64/mingw64/lib/libsodium.dll.a  C:/Users/Admin/Documents/kode/blockchain/lib/libleveldb.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Blockchain.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

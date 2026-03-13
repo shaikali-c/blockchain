@@ -3,15 +3,16 @@
 #include <pch/pch.h>
 #include <sodium.h>
 #include <cryptography/common.h>
-#include <sodium/crypto_sign.h>
-#include <vector>
 
 class Keys {
   private:
     std::string master;
     std::vector<unsigned char> _secretKey;
     std::vector<unsigned char> _publicKey;
+    std::vector<uint8_t> addr;
+
     void createKeys();
+    void deserializeKeys(const std::string&);
   public:
     Keys();
     Keys(const std::string&);
@@ -25,6 +26,6 @@ class Keys {
     void loadKeys(const std::string&);
 
     std::vector<unsigned char> sign(const std::string&);
-    int verifySignature(const std::string&, std::vector<unsigned char>);
+    int verifySignature(const std::string&, const std::vector<unsigned char>&);
 
 };

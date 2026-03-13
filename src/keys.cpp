@@ -1,7 +1,7 @@
 #include <cryptography/keys.h>
-#include <sodium/crypto_sign.h>
 
 Keys::Keys(){
+    addr.resize(32);
     createKeys();
 }
 Keys::Keys(const std::string& kname){
@@ -31,24 +31,45 @@ const std::string Keys::secretKeyHex() const {
     return toHex(_secretKey);
 }
 
-void Keys::saveKeys(const std::string& filename) {
+void Keys::saveKeys(const std::string& kname) {
 
-    createDirectory(filename);
-    std::ofstream sk_file(filename + "/secret.k", std::ios::binary);
-    std::ofstream pk_file(filename + "/public.k", std::ios::binary);
+    const size_t secKeySize = crypto_sign_SECRETKEYBYTES;
+    const size_t pubKeySize = crypto_sign_PUBLICKEYBYTES;
 
-    if (!sk_file || !sk_file) throw std::runtime_error("Cannot open files for writing");
+    std::stringstream base;
 
-    sk_file.write(reinterpret_cast<const char*>(_secretKey.data()), _secretKey.size());
-    pk_file.write(reinterpret_cast<const char*>(_publicKey.data()), _publicKey.size());
+    base.write(reinterpret_cast<const char*>(&secKeySize), sizeof(secKeySize));
+    base.write(reinterpret_cast<const char*>(_secretKey.data()), _secretKey.size());
+    base.write(reinterpret_cast<const char*>(&pubKeySize), sizeof(pubKeySize));
+    base.write(reinterpret_cast<const char*>(_publicKey.data()), _publicKey.size());
+
+    std::string serialize = base.str();
+    save(kname, serialize);
+
+}
+
+void Keys::deserializeKeys(const std::string& data) {
+
+    const size_t secKeySize = crypto_sign_SECRETKEYBYTES;
+    const size_t pubKeySize = crypto_sign_PUBLICKEYBYTES;
+
+    size_t pos = 0;
+    size_t size1;
+    memcpy(&size1, data.data() + pos, sizeof(size1));
+    pos += sizeof(size1);
+    _secretKey.assign(reinterpret_cast<const unsigned char*>(data.data() + pos),reinterpret_cast<const unsigned char*>(data.data() + pos + size1));
+    pos += size1;
+    size_t size2;
+    memcpy(&size2, data.data() + pos, sizeof(size2));
+    pos += sizeof(size2);
+    _publicKey.assign(reinterpret_cast<const unsigned char*>(data.data() + pos),reinterpret_cast<const unsigned char*>(data.data() + pos+ size2));
 }
 
 void Keys::loadKeys(const std::string& kname) {
-    std::ifstream secretKey(kname + "/secret.k", std::ios::binary);
-    std::ifstream publicKey(kname + "/public.k", std::ios::binary);
 
-    secretKey.read(reinterpret_cast<char*>(_secretKey.data()), crypto_sign_SECRETKEYBYTES);
-    publicKey.read(reinterpret_cast<char*>(_publicKey.data()), crypto_sign_PUBLICKEYBYTES);
+    std::string serializedKeys = load(kname);
+    deserializeKeys(serializedKeys);
+
 }
 
 std::vector<unsigned char> Keys::sign(const std::string& base) {
@@ -65,7 +86,7 @@ std::vector<unsigned char> Keys::sign(const std::string& base) {
     return signature;
 }
 
-int Keys::verifySignature(const std::string& base, std::vector<unsigned char> signature) {
+int Keys::verifySignature(const std::string& base, const std::vector<unsigned char>& signature) {
     int result = crypto_sign_verify_detached(
             signature.data(),
             (unsigned char*)base.data(),

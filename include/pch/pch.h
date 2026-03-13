@@ -6,4 +6,6 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <leveldb/db.h>
 #include <filesystem>
+#include <direct.h>

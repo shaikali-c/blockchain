@@ -14,6 +14,7 @@ add_executable(Blockchain)
 target_sources(Blockchain PRIVATE src/main.cpp src/keys.cpp src/common.cpp)
 
 target_link_libraries(Blockchain ${SODIUM_LIB})
+target_link_libraries(Blockchain ${CMAKE_CURRENT_SOURCE_DIR}/lib/libleveldb.a)
 target_include_directories(Blockchain PRIVATE include)
 target_precompile_headers(Blockchain PRIVATE "include/pch/pch.h")
 message(STATUS "Sodium library: ${SODIUM_LIB}")
