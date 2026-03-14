@@ -1,0 +1,44 @@
+# =========================
+# CMake build directories
+# =========================
+build/
+build-*/
+cmake-build-*/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+Makefile
+
+# =========================
+# Compiled binaries
+# =========================
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+*.out
+*.app
+
+# =========================
+# Debug / temp files
+# =========================
+*.log
+*.tmp
+*.swp
+
+# =========================
+# Zed editor
+# =========================
+.zed/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
