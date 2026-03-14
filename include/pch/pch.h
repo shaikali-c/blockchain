@@ -5,7 +5,10 @@
 #include <memory>
 #include <vector>
 #include <fstream>
+#include <iomanip>
 #include <string>
 #include <leveldb/db.h>
+#include <leveldb/options.h>
+#include <leveldb/status.h>
 #include <filesystem>
 #include <direct.h>

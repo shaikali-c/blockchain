@@ -2,6 +2,7 @@
 
 #include <pch/pch.h>
 #include <sodium.h>
+#include <db.h>
 #include <cryptography/common.h>
 
 class Keys {

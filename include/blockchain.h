@@ -1,13 +1,14 @@
 #pragma once
-#include <pch/pch.h>
 
-class Transaction;
-class UTXO;
-class Block;
+#include <pch/pch.h>
+#include <transaction.h>
+#include <block.h>
 
 class Blockchain{
-    public:
+    private:
         std::unordered_map<std::string, Transaction> transactions;
-        std::unordered_map<std::string, UTXO> utxo;
+        std::unordered_map<std::string, Output> utxo;
         std::vector<Block> blocks;
+    public:
+        Blockchain();
 };

@@ -3,6 +3,7 @@
 Keys::Keys(){
     addr.resize(32);
     createKeys();
+
 }
 Keys::Keys(const std::string& kname){
     _secretKey.resize(crypto_sign_SECRETKEYBYTES);

@@ -1,7 +1,5 @@
 #include <cryptography/common.h>
 
-namespace fs = std::filesystem;
-
 std::string toHex(const std::vector<unsigned char> key) {
     std::string hex(key.size() * 2 + 1, '\0');
     sodium_bin2hex(&hex[0], hex.size(), key.data(), key.size());
@@ -10,43 +8,38 @@ std::string toHex(const std::vector<unsigned char> key) {
 }
 
 void save(const std::string& key, const std::string& value, const std::string& dbName) {
-
-    leveldb::DB* db;
-    leveldb::Options options;
-    options.create_if_missing = true;
-    leveldb::Status status = leveldb::DB::Open(options, dbName, &db);
-
-    if(!status.ok()) {
-        std::cerr << "Bad!" << status.ToString() << "\n";
-        return;
-    }
-
-    status = db->Put(leveldb::WriteOptions(), key, value);
+    auto& manager = DBManager::getInstance(dbName);
+    leveldb::DB* db = manager.getDB();
+    db->Put(leveldb::WriteOptions(), key, value);
 
 }
 std::string load(const std::string& key, const std::string& dbName) {
-    leveldb::DB* db;
-    leveldb::Options options;
-    options.create_if_missing = true;
-    leveldb::Status status = leveldb::DB::Open(options, dbName, &db);
-
-    if(!status.ok()) {
-        std::cerr << "Bad!" << status.ToString() << "\n";
-        return "";
-    }
+    auto& manager = DBManager::getInstance(dbName);
+    leveldb::DB* db = manager.getDB();
 
     std::string value;
-    status = db->Get(leveldb::ReadOptions(), key, &value);
+    db->Get(leveldb::ReadOptions(), key, &value);
     return value;
 }
 
+std::string hash_stream(std::stringstream& ss)
+{
+    std::string data = ss.str();
 
-void createDirectory(const std::string& path) {
-    if (!fs::exists(path)) {
-        if (fs::create_directory(path)) {
-            std::cout << "Directory created: " << path << '\n';
-        } else {
-            throw std::runtime_error("Failed to create directory: " + path);
-        }
-    }
+    unsigned char hash[crypto_generichash_BYTES];
+
+    crypto_generichash(
+        hash,
+        sizeof(hash),
+        reinterpret_cast<const unsigned char*>(data.data()),
+        data.size(),
+        NULL,
+        0
+    );
+
+    std::stringstream hex;
+    for (size_t i = 0; i < sizeof(hash); i++)
+        hex << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+
+    return hex.str();
 }

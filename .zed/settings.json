@@ -1,9 +1,0 @@
-{
-  "lsp": {
-    "clangd": {
-      "binary": {
-        "path": "C:/msys64/mingw64/bin/clangd.exe",
-      },
-    },
-  },
-}
